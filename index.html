@@ -1,0 +1,219 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Abadiy Sevgi</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;600&family=Spectral:ital,wght@0,300;0,400;1,300;1,400;1,500&display=swap">
+<style>
+  /* Layout: one phone-first column. Video player, three-line subtitles, then a handwritten note.
+     One committed dark look taken from the footage: espresso browns and candle amber. */
+  :root {
+    --ink: #130a07;
+    --panel: #1d110b;
+    --line: #3a2619;
+    --amber: #e3a35c;
+    --text: #f0e2cf;
+    --muted: #a88f7b;
+    --display: "Spectral", "Times New Roman", Georgia, serif;
+    --script: "Dancing Script", "Segoe Script", cursive;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background-color: var(--ink);
+    background-image: radial-gradient(ellipse 90% 520px at 50% 260px, rgba(227,163,92,.15), transparent 70%);
+    background-repeat: no-repeat;
+    color: var(--text);
+    font-family: var(--display);
+    font-size: 16px;
+    line-height: 1.65;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    padding-block: 0;
+  }
+  p { margin: 0; }
+  :focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; }
+
+  .hero { padding-block: max(18px, env(safe-area-inset-top, 0px)) calc(56px + env(safe-area-inset-bottom, 0px)); }
+  .stage { max-width: 600px; margin: 8px auto 0; display: flex; flex-direction: column; gap: 22px; min-width: 0; }
+
+  /* video + player */
+  .screen {
+    position: relative; aspect-ratio: 16 / 10; overflow: hidden; border-radius: 6px;
+    border: 1px solid var(--line); background: var(--panel);
+    box-shadow: 0 30px 70px -28px rgba(0,0,0,.9), 0 0 90px rgba(227,163,92,.14);
+  }
+  .screen video {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; object-position: 50% 20%;
+    transform: scale(1.2); transform-origin: 50% 12%;
+    filter: saturate(1.05) contrast(1.05);
+  }
+  .screen::after {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(180deg, rgba(19,10,7,.25) 0%, transparent 25%, transparent 70%, rgba(19,10,7,.65) 100%);
+  }
+  .ctrl { position: absolute; left: 0; right: 0; bottom: 0; z-index: 2; display: flex; align-items: center; gap: 10px; padding: 26px 12px 10px; background: linear-gradient(180deg, transparent, rgba(19,10,7,.88)); }
+  .ib { width: 34px; height: 34px; flex: none; padding: 0; display: grid; place-items: center; border-radius: 50%; border: 1px solid rgba(240,226,207,.35); background: rgba(19,10,7,.5); color: var(--text); cursor: pointer; transition: border-color .2s, color .2s; }
+  .ib:hover { border-color: var(--amber); color: var(--amber); }
+  .ib svg { width: 16px; height: 16px; fill: currentColor; display: block; }
+  .seek { -webkit-appearance: none; appearance: none; flex: 1; min-width: 0; width: auto; height: 22px; margin: 0; padding: 0; background: transparent; border: 0; border-radius: 0; cursor: pointer; --p: 0%; }
+  .seek:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; }
+  .seek::-webkit-slider-runnable-track { height: 3px; border-radius: 3px; background: linear-gradient(90deg, var(--amber) var(--p), rgba(240,226,207,.3) var(--p)); }
+  .seek::-moz-range-track { height: 3px; border-radius: 3px; background: rgba(240,226,207,.3); }
+  .seek::-moz-range-progress { height: 3px; border-radius: 3px; background: var(--amber); }
+  .seek::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; margin-top: -5.5px; border-radius: 50%; border: 0; background: var(--amber); box-shadow: 0 0 10px rgba(227,163,92,.7); }
+  .seek::-moz-range-thumb { width: 14px; height: 14px; border-radius: 50%; border: 0; background: var(--amber); }
+  .time { flex: none; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-size: .74rem; letter-spacing: .02em; color: var(--text); opacity: .85; font-variant-numeric: tabular-nums; }
+
+  /* subtitles: previous, current, next */
+  .subs { display: flex; flex-direction: column; justify-content: center; gap: 10px; text-align: center; min-height: 10.5rem; padding-inline: 4px; }
+  .sub { margin: 0; font-style: italic; font-weight: 300; line-height: 1.25; text-wrap: balance; overflow-wrap: anywhere; }
+  .sub:empty { display: none; }
+  .sub.prev { font-size: .98rem; color: var(--muted); opacity: .6; }
+  .sub.next { font-size: .98rem; color: var(--muted); opacity: .8; }
+  .sub.now { font-size: clamp(1.6rem, 7vw, 2.3rem); color: var(--text); }
+  .sub.now .w { color: rgba(240,226,207,.28); transition: color .4s, text-shadow .4s; }
+  .sub.now .w.on { color: var(--text); text-shadow: 0 0 26px rgba(227,163,92,.5); }
+  .sub.now .w.cur { color: var(--amber); }
+  .sub.swap { animation: lift .75s cubic-bezier(.2,.7,.2,1) both; }
+  .sub.swap.next { animation-delay: .12s; }
+  @keyframes lift { from { opacity: 0; transform: translateY(18px); filter: blur(3px); } to { opacity: 1; transform: none; filter: none; } }
+
+  /* handwritten note */
+  .note {
+    margin: 34px auto 0; max-width: 600px; text-align: center;
+    font-family: var(--script); font-weight: 500;
+    font-size: clamp(1.4rem, 5.6vw, 1.75rem); line-height: 1.6; color: var(--text);
+  }
+  .note::before { content: ""; display: block; width: 56px; height: 1px; margin: 0 auto 26px; background: var(--amber); opacity: .7; }
+  .note p { margin: 0 0 1.5em; }
+  .note p:last-child { margin-bottom: 0; }
+  .note .s { opacity: .3; transition: opacity 1.3s ease, text-shadow 1.3s ease, color 1.3s ease; }
+  .note .s.in { opacity: 1; }
+  .note .hl.in { color: var(--amber); text-shadow: 0 0 30px rgba(227,163,92,.45); }
+  .note .last { display: block; margin-top: .5em; font-size: 1.22em; font-weight: 600; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sub.swap { animation: none; }
+    .sub.now .w, .note .s, .ib { transition: none; }
+  }
+</style>
+
+<header class="hero">
+  <div class="stage">
+    <div class="screen">
+      <video id="film" src="video.mp4" poster="s2.jpg" autoplay muted loop playsinline preload="auto" aria-label="Sham yorug'idagi lavha"></video>
+      <div class="ctrl">
+        <button class="ib" id="play" type="button" aria-label="To'xtatish"></button>
+        <input class="seek" id="seek" type="range" min="0" max="24" step="0.01" value="0" aria-label="Videoda joyni tanlash">
+        <span class="time" id="tm">0:00 / 0:24</span>
+        <button class="ib" id="snd" type="button" aria-label="Ovozni yoqish"></button>
+      </div>
+    </div>
+    <div class="subs" id="subs" aria-live="off">
+      <p class="sub prev" id="sPrev"></p>
+      <p class="sub now" id="sNow"></p>
+      <p class="sub next" id="sNext"></p>
+    </div>
+  </div>
+  <div class="note" id="note">
+    <p><span class="s">Men sen bilan ancha vaqtdan beri yozishishni, gaplashishni xohlardim va o'sha kun keldi.</span> <span class="s">Senga qarasam, barcha gaplarim esimdan chiqadi.</span> <span class="s">Butun hayolimni egallaysan, lekin sen bilan o'tgan sukut ham go'zal.</span> <span class="s hl">Seni yaxshi ko'raman.</span></p>
+    <p><span class="s">Shuningdek, unutma: men seni Allohdan nechi martalab yolvorib so'raganimni, meni tanlagan insonni emas, seni tanlaganimni.</span> <span class="s">Chunki men biror insonni osonlikcha sevib qolmayman, lekin sevdimmi, demak uni umrimning oxirigacha sevaman.</span> <span class="s">Axir qanday unutay, har kuni sen haqingdagi tushlar va o'ylar meni qiynasa.</span></p>
+    <p><span class="s">Bir marta tushimga kirsang, hayotimdagi hamma muammolarim esimdan chiqib ketadi-yu, bir marta kulib qaraganing uchun aql-hushimni yo'qotaman-ku.</span> <span class="s">Men seni shunchaki sevmaganman.</span> <span class="s hl last">Men seni butun borlig'im bilan yaxshi ko'raman.</span></p>
+  </div>
+</header>
+
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+
+  /* video + subtitles + player */
+  var film = $('film'), play = $('play'), snd = $('snd'), seek = $('seek'), tm = $('tm'), dragging = false;
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce) { try { film.removeAttribute('autoplay'); film.pause(); } catch (e) {} }
+  /* s, e: start and end second in the video; t: Uzbek text */
+  var CUES = [
+    { s: 0,  e: 2,  t: "Men seni sevaman." },
+    { s: 2,  e: 7,  t: "Men bilaman ki, muhabbat — bu bo'shliqqa qilingan faryod, unutilish muqarrar va biz mahkum etilganmiz." },
+    { s: 7,  e: 8,  t: "Nima?" },
+    { s: 9,  e: 13, t: "Kun kelib barcha harakatlarimiz kulga aylanadi." },
+    { s: 15, e: 20, t: "Men bilaman ki, qachonlardir Quyosh Yerni yutib yuboradi va u yo'qolib ketadi." },
+    { s: 20, e: 23, t: "Lekin men seni sevaman." }
+  ];
+  var ICON = {
+    play: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>',
+    pause: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>',
+    on: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 4V5L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z"/></svg>',
+    off: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 4V5L7 9H3zm13.6.6l1.4-1.4 2.5 2.5 2.5-2.5 1.4 1.4-2.5 2.5 2.5 2.5-1.4 1.4-2.5-2.5-2.5 2.5-1.4-1.4 2.5-2.5z"/></svg>'
+  };
+  function mmss(x) { x = Math.max(0, Math.floor(x || 0)); return Math.floor(x / 60) + ':' + ('0' + (x % 60)).slice(-2); }
+  function paintBtns() {
+    play.innerHTML = film.paused ? ICON.play : ICON.pause;
+    play.setAttribute('aria-label', film.paused ? 'Ijro etish' : "To'xtatish");
+    snd.innerHTML = film.muted ? ICON.off : ICON.on;
+    snd.setAttribute('aria-label', film.muted ? 'Ovozni yoqish' : "Ovozni o'chirish");
+  }
+  function toggle() { if (film.paused) { var p = film.play(); if (p && p.catch) p.catch(function () {}); } else { film.pause(); } }
+  play.addEventListener('click', toggle);
+  film.addEventListener('click', toggle);
+  snd.addEventListener('click', function () { film.muted = !film.muted; paintBtns(); });
+  ['play', 'pause', 'volumechange'].forEach(function (ev) { film.addEventListener(ev, paintBtns); });
+  seek.addEventListener('pointerdown', function () { dragging = true; });
+  seek.addEventListener('input', function () { dragging = true; film.currentTime = parseFloat(seek.value); });
+  seek.addEventListener('change', function () { dragging = false; });
+  window.addEventListener('pointerup', function () { dragging = false; });
+  paintBtns();
+
+  var sP = $('sPrev'), sN = $('sNow'), sX = $('sNext'), cur = -2, words = [];
+  function swap(el) { el.classList.remove('swap'); void el.offsetWidth; el.classList.add('swap'); }
+  function setCue(i) {
+    cur = i;
+    var c = CUES[i], parts = c.t.split(' ');
+    sP.textContent = i > 0 ? CUES[i - 1].t : '';
+    sX.textContent = CUES[i + 1] ? CUES[i + 1].t : '';
+    sN.textContent = '';
+    words = [];
+    parts.forEach(function (w, k) {
+      var sp = document.createElement('span');
+      sp.className = 'w'; sp.textContent = w;
+      sN.appendChild(sp);
+      if (k < parts.length - 1) sN.appendChild(document.createTextNode(' '));
+      words.push(sp);
+    });
+    if (!reduce) { swap(sP); swap(sN); swap(sX); }
+  }
+  function tick() {
+    var t = film.currentTime || 0, i = 0;
+    for (var k = 0; k < CUES.length; k++) { if (t >= CUES[k].s) i = k; }
+    if (i !== cur) setCue(i);
+    var c = CUES[i], span = Math.max(0.5, (c.e - c.s) * 0.9);
+    var lit = Math.max(0, Math.min(words.length, Math.floor(((t - c.s) / span) * words.length) + 1));
+    for (var j = 0; j < words.length; j++) {
+      words[j].classList.toggle('on', j < lit);
+      words[j].classList.toggle('cur', j === lit - 1 && lit < words.length);
+    }
+    var d = film.duration || 24;
+    if (parseFloat(seek.max) !== d) seek.max = d;
+    if (!dragging) seek.value = t;
+    seek.style.setProperty('--p', (t / d * 100) + '%');
+    tm.textContent = mmss(t) + ' / ' + mmss(d);
+    requestAnimationFrame(tick);
+  }
+  tick();
+
+  /* note reveal: sentences light up as they scroll into view */
+  var spans = document.querySelectorAll('#note .s');
+  if (reduce || !('IntersectionObserver' in window)) {
+    spans.forEach(function (el) { el.classList.add('in'); });
+  } else {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { threshold: 0.6, rootMargin: '0px 0px -8% 0px' });
+    spans.forEach(function (el) { io.observe(el); });
+  }
+})();
+</script>
+
+</body></html>
